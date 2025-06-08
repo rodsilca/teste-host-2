@@ -1,16 +1,28 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getDatabase} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
+let app, auth, dba;
 // função para buscar a configuração do Firebase
 async function fetchFirebaseConfig() {
   const res = await fetch('/api/firebase-config');
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao buscar config: ${res.status} - ${errorText}`);
+  }
+
   return await res.json();
 }
 
 // função para inicializar o Firebase
 export async function initFirebase() {
+  if (app) return { app, auth, dba }; // já inicializado
+
   const config = await fetchFirebaseConfig();
-  const app = initializeApp(config);
-  return app;
+  app = initializeApp(config);
+  auth = getAuth(app);
+  dba = getDatabase(app);
+  return { app, auth, dba };
 }
 
 // const firebaseConfig = {

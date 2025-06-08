@@ -1,10 +1,12 @@
 //import firebaseApp from './init/firebase-init.js';
 import { initFirebase } from './init/firebase-init.js';
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-const app = await initFirebase(); // aguarda o app ser inicializado
+const {app, auth, dba } = await initFirebase(); // aguarda o app ser inicializado
 
 // agora você pode usar o `app` normalmente
 console.log("Firebase app iniciado:", app);
+console.log("Realtime Database pronto:", dba);
 
 
 var db = firebase.database();
